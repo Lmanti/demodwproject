@@ -1,7 +1,7 @@
 package com.digitalware.demodw.controllers;
 
 import com.digitalware.demodw.models.Material;
-import com.digitalware.demodw.service.MaterialService;
+import com.digitalware.demodw.services.MaterialService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;

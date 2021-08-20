@@ -1,7 +1,7 @@
 package com.digitalware.demodw.controllers;
 
 import com.digitalware.demodw.models.Producto;
-import com.digitalware.demodw.service.ProductoService;
+import com.digitalware.demodw.services.ProductoService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
@@ -34,7 +34,7 @@ public class ProductoController {
     }
     
     @RequestMapping(value="/updateProducto/{id}", method = RequestMethod.PUT)
-    public ResponseEntity<Producto> updateMaterial(@PathVariable("id") int codigo_producto, @RequestBody JsonNode node) {
+    public Boolean updateMaterial(@PathVariable("id") int codigo_producto, @RequestBody JsonNode node) {
         Producto producto = mapper.convertValue(node, Producto.class);
         return productoService.modificarProducto(codigo_producto, producto);
     }

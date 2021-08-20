@@ -1,11 +1,11 @@
-package com.digitalware.demodw.service;
+package com.digitalware.demodw.services;
 
 import com.digitalware.demodw.models.Detalle_Producto;
 import com.digitalware.demodw.models.Material;
 import com.digitalware.demodw.models.Producto;
-import com.digitalware.demodw.repository.DetalleProductoRepository;
-import com.digitalware.demodw.repository.MaterialRepository;
-import com.digitalware.demodw.repository.ProductoRepository;
+import com.digitalware.demodw.repositories.DetalleProductoRepository;
+import com.digitalware.demodw.repositories.MaterialRepository;
+import com.digitalware.demodw.repositories.ProductoRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -70,7 +70,7 @@ public class ProductoService {
         }
     }
     
-    public ResponseEntity<Producto> modificarProducto(int id , Producto info) {
+    public Boolean modificarProducto(int id , Producto info) {
         Optional<Producto> producto = productoRepository.findById(id);
         if (producto.isPresent()) {
             Producto _producto = producto.get();
@@ -78,14 +78,43 @@ public class ProductoService {
             _producto.setImpuesto_producto(info.getImpuesto_producto());
             _producto.setMateriales(info.getMateriales());
             productoRepository.save(_producto);
-            return new ResponseEntity<>(productoRepository.save(_producto), HttpStatus.OK);
+            for (Detalle_Producto object : _producto.getMateria_prima()) {
+                detalle.deletesById(object.getId());
+            }
+            Optional<Producto> producto2 = productoRepository.findById(id);
+            if (producto2.isPresent()) {
+                Producto _producto2 = producto2.get();
+                for (int x : _producto2.getMateriales()) {
+                    Optional<Material> auxiliar2 = materialRepository.findById(x);
+                    if (auxiliar2.isPresent()){
+                        Material prueba2 = auxiliar2.get();
+                        Detalle_Producto _detalle2 = new Detalle_Producto();
+                        _detalle2.setProducto(_producto2);
+                        _detalle2.setMaterial(prueba2);
+                        _detalle2.setCantidad(10);
+                        _detalle2.setTotal(_detalle2.getCantidad() * prueba2.getPrecio_material());
+                        _detalle2.setIdProducto(_producto2.getCodigo_producto());
+                        _detalle2.setIdMaterial(prueba2.getCodigo_material());
+                        _detalle2.setNombreMaterial(prueba2.getDescripcion_material());
+                        detalle.save(_detalle2);
+                    }
+                }
+            }
+            return true;
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return false;
         }
     }
     
     public Boolean borrarProducto(int id) {
         try {
+            Optional<Producto> producto = productoRepository.findById(id);
+            if (producto.isPresent()) {
+                Producto _producto = producto.get();
+                for (Detalle_Producto object : _producto.getMateria_prima()) {
+                    detalle.deletesById(object.getId());
+                }
+            }
             productoRepository.deleteById(id);
             return true;
         } catch (Exception e) {

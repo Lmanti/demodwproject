@@ -1,4 +1,4 @@
-package com.digitalware.demodw.repository;
+package com.digitalware.demodw.repositories;
 
 import com.digitalware.demodw.models.Material;
 import org.springframework.data.jpa.repository.JpaRepository;

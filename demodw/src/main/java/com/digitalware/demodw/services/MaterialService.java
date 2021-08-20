@@ -1,7 +1,7 @@
-package com.digitalware.demodw.service;
+package com.digitalware.demodw.services;
 
 import com.digitalware.demodw.models.Material;
-import com.digitalware.demodw.repository.MaterialRepository;
+import com.digitalware.demodw.repositories.MaterialRepository;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
